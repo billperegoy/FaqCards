@@ -1,0 +1,22 @@
+.faq-container {
+  @include outer-container;
+}
+
+.faq-header {
+  @include span-columns(12);
+  border: solid 1px;
+  text-align: center;
+  font-size: 40px; 
+}
+
+.faq-sidebar {
+  @include span-columns(3);
+  border: solid 1px;
+  height: 800px;
+}
+
+.faq-cards {
+  @include span-columns(9);
+  border: solid 1px;
+  height: 800px;
+}
