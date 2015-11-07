@@ -1,37 +1,30 @@
 module.exports = function(grunt) {
 
   grunt.initConfig({
-    elm: {
-      compile: {
+    pkg: grunt.file.readJSON('package.json'),
+
+    sass: {
+      css: {
         files: {
-          "elm.js": ["frontend/*.elm"]
+          'css/styles.css' : 'sass/styles.scss'
         }
       }
     },
 
-    sass: {
-      files: {
-        'css/styles.css' : 'scss/styles.scss'
-      }
-    },
-
     watch: {
-      elm: {
-        files: ["frontend/*.elm"],
-        tasks: ["elm"]
+      css: {
+        files: ["sass/**/*.scss"],
+        tasks: ["sass"]
       }
-    },
-    clean: ["elm-stuff/build-artifacts"]
+    }
   });
 
 
 
 
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-elm');
   grunt.loadNpmTasks('grunt-contrib-sass');
 
-  grunt.registerTask('default', ['elm']);
+  grunt.registerTask('default', ['watch']);
 
 };

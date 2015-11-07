@@ -76,7 +76,23 @@ cards : Html
 cards =
   div
     [ class "faq-cards" ]
-    [ text "cards" ]
+    [ 
+      div 
+        [ class "faq-card" ]
+        [ text "Card 1" ],
+      div 
+        [ class "faq-card" ]
+        [ text "Card 2" ],
+      div 
+        [ class "faq-card" ]
+        [ text "Card 3" ],
+      div 
+        [ class "faq-card" ]
+        [ text "Card 4" ],
+      div 
+        [ class "faq-card" ]
+        [ text "Card 5" ]
+    ]
 
 
 

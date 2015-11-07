@@ -4068,7 +4068,21 @@ Elm.Main.make = function (_elm) {
    $StartApp$Simple = Elm.StartApp.Simple.make(_elm);
    var cards = A2($Html.div,
    _L.fromArray([$Html$Attributes.$class("faq-cards")]),
-   _L.fromArray([$Html.text("cards")]));
+   _L.fromArray([A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 1")]))
+                ,A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 2")]))
+                ,A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 3")]))
+                ,A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 4")]))
+                ,A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 5")]))]));
    var checkBox = A2($Html.input,
    _L.fromArray([$Html$Attributes.type$("checkbox")]),
    _L.fromArray([$Html.text("box")]));

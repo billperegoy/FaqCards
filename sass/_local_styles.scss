@@ -20,3 +20,9 @@
   border: solid 1px;
   height: 800px;
 }
+
+.faq-card {
+  @include span-columns(3);
+  border: solid 1px;
+  height: 40px;
+}
