@@ -4231,37 +4231,65 @@ Elm.Main.make = function (_elm) {
                                     ,A2($List._op["::"],
                                     newTag,
                                     model.tagTypes)]
+                                   ,["newTagInput",""]
                                    ,["nextId",model.nextId + 1]],
                  model);
               }();
-            case "NoOp": return model;}
+            case "NoOp": return model;
+            case "UpdateTagInput":
+            return _U.replace([["newTagInput"
+                               ,action._0]],
+              model);}
          _U.badCase($moduleName,
-         "between lines 44 and 55");
+         "between lines 53 and 69");
       }();
    });
    var Add = function (a) {
       return {ctor: "Add",_0: a};
    };
-   var newTagForm = function (address) {
+   var UpdateTagInput = function (a) {
+      return {ctor: "UpdateTagInput"
+             ,_0: a};
+   };
+   var NoOp = {ctor: "NoOp"};
+   var onInput = F2(function (address,
+   f) {
+      return A3($Html$Events.on,
+      "input",
+      $Html$Events.targetValue,
+      function (v) {
+         return A2($Signal.message,
+         address,
+         f(v));
+      });
+   });
+   var newTagForm = F2(function (address,
+   model) {
       return A2($Html.div,
       _L.fromArray([]),
       _L.fromArray([A2($Html.input,
                    _L.fromArray([$Html$Attributes.type$("text")
                                 ,$Html$Attributes.placeholder("Tag Name")
-                                ,$Html$Attributes.name("tag")]),
+                                ,$Html$Attributes.value(model.newTagInput)
+                                ,$Html$Attributes.name("tag")
+                                ,A2(onInput,
+                                address,
+                                UpdateTagInput)]),
                    _L.fromArray([]))
                    ,A2($Html.button,
                    _L.fromArray([A2($Html$Events.onClick,
                    address,
-                   Add("new"))]),
+                   Add(model.newTagInput))]),
                    _L.fromArray([$Html.text("New")]))]));
-   };
+   });
    var sidebar = F2(function (address,
    model) {
       return A2($Html.div,
       _L.fromArray([$Html$Attributes.$class("faq-sidebar")]),
       _L.fromArray([tagList(model)
-                   ,newTagForm(address)]));
+                   ,A2(newTagForm,
+                   address,
+                   model)]));
    });
    var view = F2(function (address,
    model) {
@@ -4275,8 +4303,8 @@ Elm.Main.make = function (_elm) {
                                 model)
                                 ,cards]))]));
    });
-   var NoOp = {ctor: "NoOp"};
    var model = {_: {}
+               ,newTagInput: ""
                ,nextId: 7
                ,tagTypes: _L.fromArray([{_: {}
                                         ,id: 1
@@ -4292,9 +4320,12 @@ Elm.Main.make = function (_elm) {
                                      ,model: model
                                      ,update: update
                                      ,view: view});
-   var Model = F2(function (a,b) {
+   var Model = F3(function (a,
+   b,
+   c) {
       return {_: {}
-             ,nextId: b
+             ,newTagInput: b
+             ,nextId: c
              ,tagTypes: a};
    });
    var Tag = F2(function (a,b) {
@@ -4304,7 +4335,9 @@ Elm.Main.make = function (_elm) {
                       ,Tag: Tag
                       ,Model: Model
                       ,model: model
+                      ,onInput: onInput
                       ,NoOp: NoOp
+                      ,UpdateTagInput: UpdateTagInput
                       ,Add: Add
                       ,update: update
                       ,header: header

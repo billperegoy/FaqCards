@@ -1,7 +1,7 @@
 module Main where
 
 import Html exposing (..)
-import Html.Attributes exposing (class, type', placeholder, name)
+import Html.Attributes exposing (class, type', placeholder, name, value)
 import Html.Events exposing (..)
 import Signal exposing (Address)
 import StartApp.Simple exposing (start)
@@ -16,6 +16,7 @@ type alias Tag =
 type alias Model =
   {
     tagTypes:List Tag
+  , newTagInput : String
   , nextId: Int
   }
 
@@ -30,13 +31,21 @@ model =
       , { id = 4, name = "rerun" }
       , { id = 5, name = "debug" }
       , { id = 6, name = "incisive" }
-     ],
-     nextId = 7
+      ]
+      , newTagInput = ""
+      , nextId = 7
   }
+
+
+-- Utilities
+onInput : Address a -> (String -> a) -> Attribute
+onInput address f =
+  on "input" targetValue (\v -> Signal.message address (f v))
 
 -- Update
 type Action
   = NoOp
+  | UpdateTagInput String
   | Add String
 
 update : Action -> Model -> Model
@@ -45,12 +54,17 @@ update action model =
     NoOp ->
       model
 
+    UpdateTagInput name ->
+      { model |
+          newTagInput <- name
+      }
     Add name ->
       let newTag =
         { id = model.nextId, name = name }
       in 
         { model | 
             tagTypes <- newTag :: model.tagTypes,
+            newTagInput <- "",
             nextId <- model.nextId + 1
         }
 
@@ -92,7 +106,7 @@ sidebar address model =
     [ class "faq-sidebar" ]
     [ 
       tagList model
-    , newTagForm address
+    , newTagForm address model
     ]
 
 cards : Html
@@ -122,18 +136,20 @@ cards =
 
 
 
-newTagForm : Address Action -> Html
-newTagForm address =
+newTagForm : Address Action -> Model -> Html
+newTagForm address model =
   div
     []
     [
       input
       [ type' "text",
         placeholder "Tag Name",
-        name "tag"
+        value model.newTagInput,
+        name "tag",
+        onInput address UpdateTagInput
       ]
       [],
-      button [ onClick address (Add "new") ] [text "New" ]
+      button [ onClick address (Add model.newTagInput) ] [text "New" ]
     ]
 
 
