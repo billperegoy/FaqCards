@@ -11,10 +11,24 @@ module.exports = function(grunt) {
       }
     },
 
+
+    elm: {
+      compile: {
+        files: {
+          "frontend/elm.js": ["frontend/Main.elm"]
+        }
+      }
+    },
+
     watch: {
       css: {
         files: ["sass/**/*.scss"],
         tasks: ["sass"]
+      },
+
+      elm: {
+        files: ["frontend/*.elm"],
+        tasks: ["elm"]
       }
     }
   });
@@ -24,7 +38,9 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-elm');
 
-  grunt.registerTask('default', ['watch']);
+  grunt.registerTask('default', ['watch', 'elm']);
 
 };
