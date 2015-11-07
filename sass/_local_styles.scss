@@ -4,9 +4,15 @@
 
 .faq-header {
   @include span-columns(12);
+  @include omega();
   border: solid 1px;
   text-align: center;
   font-size: 40px; 
+}
+
+.faq-body {
+  @include span-columns(12);
+  height: 800px;
 }
 
 .faq-sidebar {
@@ -26,3 +32,4 @@
   border: solid 1px;
   height: 40px;
 }
+

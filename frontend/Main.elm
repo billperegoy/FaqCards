@@ -1,7 +1,9 @@
 module Main where
 
 import Html exposing (..)
-import Html.Attributes exposing (class, type')
+import Html.Attributes exposing (class, type', placeholder, name)
+import Html.Events exposing (..)
+import Signal exposing (Address)
 import StartApp.Simple exposing (start)
 
 -- Model
@@ -12,28 +14,46 @@ type alias Tag =
   }
 
 type alias Model =
-    List Tag
+  {
+    tagTypes:List Tag
+  , nextId: Int
+  }
 
 model : Model
 model =
-  [
-    { id = 1, name = "gvp" }
-    , { id = 2, name = "coverage" }
-    , { id = 2, name = "waves" }
-    , { id = 2, name = "rerun" }
-    , { id = 2, name = "debug" }
-    , { id = 2, name = "incisive" }
-  ]
+  {
+    tagTypes =
+      [
+        { id = 1, name = "gvp" }
+      , { id = 2, name = "coverage" }
+      , { id = 3, name = "waves" }
+      , { id = 4, name = "rerun" }
+      , { id = 5, name = "debug" }
+      , { id = 6, name = "incisive" }
+     ],
+     nextId = 7
+  }
 
 -- Update
 type Action
   = NoOp
+  | Add String
 
 update : Action -> Model -> Model
 update action model =
   case action of
     NoOp ->
       model
+
+    Add name ->
+      let newTag =
+        { id = model.nextId, name = name }
+      in 
+        { model | 
+            tagTypes <- newTag :: model.tagTypes,
+            nextId <- model.nextId + 1
+        }
+
 
 -- View
 header : Html
@@ -52,7 +72,7 @@ tagItem tag =
     [] 
     [ 
       checkBox 
-      , text tag.name
+    , text tag.name
     ]
 
 checkBox : Html
@@ -62,15 +82,18 @@ checkBox =
 tagList : Model -> Html
 tagList model =
   let tags =
-    List.map tagItem model
+    List.map tagItem model.tagTypes
   in
      ul [] tags
 
-sidebar : Model -> Html
-sidebar model =
+sidebar : Address Action -> Model -> Html
+sidebar address model =
   div
     [ class "faq-sidebar" ]
-    [ tagList model ]
+    [ 
+      tagList model
+    , newTagForm address
+    ]
 
 cards : Html
 cards =
@@ -91,19 +114,41 @@ cards =
         [ text "Card 4" ],
       div 
         [ class "faq-card" ]
-        [ text "Card 5" ]
+        [ text "Card 5" ],
+      div 
+        [ class "faq-card" ]
+        [ text "Card 6" ]
     ]
 
 
 
-view : Signal.Address Action -> Model -> Html
+newTagForm : Address Action -> Html
+newTagForm address =
+  div
+    []
+    [
+      input
+      [ type' "text",
+        placeholder "Tag Name",
+        name "tag"
+      ]
+      [],
+      button [ onClick address (Add "new") ] [text "New" ]
+    ]
+
+
+view : Address Action -> Model -> Html
 view address model =
   div
     [ class "faq-container" ]
     [
       header,
-      sidebar model,
-      cards
+      div 
+        [ class "faq-body" ] 
+        [
+          sidebar address model,
+          cards
+        ]
     ]
 
 

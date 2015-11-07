@@ -3544,6 +3544,113 @@ Elm.Html.Attributes.make = function (_elm) {
                                  ,attribute: attribute};
    return _elm.Html.Attributes.values;
 };
+Elm.Html = Elm.Html || {};
+Elm.Html.Events = Elm.Html.Events || {};
+Elm.Html.Events.make = function (_elm) {
+   "use strict";
+   _elm.Html = _elm.Html || {};
+   _elm.Html.Events = _elm.Html.Events || {};
+   if (_elm.Html.Events.values)
+   return _elm.Html.Events.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Html.Events",
+   $Basics = Elm.Basics.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $VirtualDom = Elm.VirtualDom.make(_elm);
+   var keyCode = A2($Json$Decode._op[":="],
+   "keyCode",
+   $Json$Decode.$int);
+   var targetChecked = A2($Json$Decode.at,
+   _L.fromArray(["target"
+                ,"checked"]),
+   $Json$Decode.bool);
+   var targetValue = A2($Json$Decode.at,
+   _L.fromArray(["target"
+                ,"value"]),
+   $Json$Decode.string);
+   var defaultOptions = $VirtualDom.defaultOptions;
+   var Options = F2(function (a,
+   b) {
+      return {_: {}
+             ,preventDefault: b
+             ,stopPropagation: a};
+   });
+   var onWithOptions = $VirtualDom.onWithOptions;
+   var on = $VirtualDom.on;
+   var messageOn = F3(function (name,
+   addr,
+   msg) {
+      return A3(on,
+      name,
+      $Json$Decode.value,
+      function (_v0) {
+         return function () {
+            return A2($Signal.message,
+            addr,
+            msg);
+         }();
+      });
+   });
+   var onClick = messageOn("click");
+   var onDoubleClick = messageOn("dblclick");
+   var onMouseMove = messageOn("mousemove");
+   var onMouseDown = messageOn("mousedown");
+   var onMouseUp = messageOn("mouseup");
+   var onMouseEnter = messageOn("mouseenter");
+   var onMouseLeave = messageOn("mouseleave");
+   var onMouseOver = messageOn("mouseover");
+   var onMouseOut = messageOn("mouseout");
+   var onBlur = messageOn("blur");
+   var onFocus = messageOn("focus");
+   var onSubmit = messageOn("submit");
+   var onKey = F3(function (name,
+   addr,
+   handler) {
+      return A3(on,
+      name,
+      keyCode,
+      function (code) {
+         return A2($Signal.message,
+         addr,
+         handler(code));
+      });
+   });
+   var onKeyUp = onKey("keyup");
+   var onKeyDown = onKey("keydown");
+   var onKeyPress = onKey("keypress");
+   _elm.Html.Events.values = {_op: _op
+                             ,onBlur: onBlur
+                             ,onFocus: onFocus
+                             ,onSubmit: onSubmit
+                             ,onKeyUp: onKeyUp
+                             ,onKeyDown: onKeyDown
+                             ,onKeyPress: onKeyPress
+                             ,onClick: onClick
+                             ,onDoubleClick: onDoubleClick
+                             ,onMouseMove: onMouseMove
+                             ,onMouseDown: onMouseDown
+                             ,onMouseUp: onMouseUp
+                             ,onMouseEnter: onMouseEnter
+                             ,onMouseLeave: onMouseLeave
+                             ,onMouseOver: onMouseOver
+                             ,onMouseOut: onMouseOut
+                             ,on: on
+                             ,onWithOptions: onWithOptions
+                             ,defaultOptions: defaultOptions
+                             ,targetValue: targetValue
+                             ,targetChecked: targetChecked
+                             ,keyCode: keyCode
+                             ,Options: Options};
+   return _elm.Html.Events.values;
+};
 Elm.Json = Elm.Json || {};
 Elm.Json.Decode = Elm.Json.Decode || {};
 Elm.Json.Decode.make = function (_elm) {
@@ -4061,6 +4168,7 @@ Elm.Main.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -4082,7 +4190,10 @@ Elm.Main.make = function (_elm) {
                 _L.fromArray([$Html.text("Card 4")]))
                 ,A2($Html.div,
                 _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 5")]))]));
+                _L.fromArray([$Html.text("Card 5")]))
+                ,A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 6")]))]));
    var checkBox = A2($Html.input,
    _L.fromArray([$Html$Attributes.type$("checkbox")]),
    _L.fromArray([$Html.text("box")]));
@@ -4096,61 +4207,105 @@ Elm.Main.make = function (_elm) {
       return function () {
          var tags = A2($List.map,
          tagItem,
-         model);
+         model.tagTypes);
          return A2($Html.ul,
          _L.fromArray([]),
          tags);
       }();
-   };
-   var sidebar = function (model) {
-      return A2($Html.div,
-      _L.fromArray([$Html$Attributes.$class("faq-sidebar")]),
-      _L.fromArray([tagList(model)]));
    };
    var header = A2($Html.div,
    _L.fromArray([$Html$Attributes.$class("faq-header")]),
    _L.fromArray([A2($Html.h1,
    _L.fromArray([]),
    _L.fromArray([$Html.text("FAQ Cards")]))]));
+   var update = F2(function (action,
+   model) {
+      return function () {
+         switch (action.ctor)
+         {case "Add":
+            return function () {
+                 var newTag = {_: {}
+                              ,id: model.nextId
+                              ,name: action._0};
+                 return _U.replace([["tagTypes"
+                                    ,A2($List._op["::"],
+                                    newTag,
+                                    model.tagTypes)]
+                                   ,["nextId",model.nextId + 1]],
+                 model);
+              }();
+            case "NoOp": return model;}
+         _U.badCase($moduleName,
+         "between lines 44 and 55");
+      }();
+   });
+   var Add = function (a) {
+      return {ctor: "Add",_0: a};
+   };
+   var newTagForm = function (address) {
+      return A2($Html.div,
+      _L.fromArray([]),
+      _L.fromArray([A2($Html.input,
+                   _L.fromArray([$Html$Attributes.type$("text")
+                                ,$Html$Attributes.placeholder("Tag Name")
+                                ,$Html$Attributes.name("tag")]),
+                   _L.fromArray([]))
+                   ,A2($Html.button,
+                   _L.fromArray([A2($Html$Events.onClick,
+                   address,
+                   Add("new"))]),
+                   _L.fromArray([$Html.text("New")]))]));
+   };
+   var sidebar = F2(function (address,
+   model) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("faq-sidebar")]),
+      _L.fromArray([tagList(model)
+                   ,newTagForm(address)]));
+   });
    var view = F2(function (address,
    model) {
       return A2($Html.div,
       _L.fromArray([$Html$Attributes.$class("faq-container")]),
       _L.fromArray([header
-                   ,sidebar(model)
-                   ,cards]));
-   });
-   var update = F2(function (action,
-   model) {
-      return function () {
-         switch (action.ctor)
-         {case "NoOp": return model;}
-         _U.badCase($moduleName,
-         "between lines 34 and 36");
-      }();
+                   ,A2($Html.div,
+                   _L.fromArray([$Html$Attributes.$class("faq-body")]),
+                   _L.fromArray([A2(sidebar,
+                                address,
+                                model)
+                                ,cards]))]));
    });
    var NoOp = {ctor: "NoOp"};
-   var model = _L.fromArray([{_: {}
-                             ,id: 1
-                             ,name: "gvp"}
-                            ,{_: {},id: 2,name: "coverage"}
-                            ,{_: {},id: 2,name: "waves"}
-                            ,{_: {},id: 2,name: "rerun"}
-                            ,{_: {},id: 2,name: "debug"}
-                            ,{_: {}
-                             ,id: 2
-                             ,name: "incisive"}]);
+   var model = {_: {}
+               ,nextId: 7
+               ,tagTypes: _L.fromArray([{_: {}
+                                        ,id: 1
+                                        ,name: "gvp"}
+                                       ,{_: {},id: 2,name: "coverage"}
+                                       ,{_: {},id: 3,name: "waves"}
+                                       ,{_: {},id: 4,name: "rerun"}
+                                       ,{_: {},id: 5,name: "debug"}
+                                       ,{_: {}
+                                        ,id: 6
+                                        ,name: "incisive"}])};
    var main = $StartApp$Simple.start({_: {}
                                      ,model: model
                                      ,update: update
                                      ,view: view});
+   var Model = F2(function (a,b) {
+      return {_: {}
+             ,nextId: b
+             ,tagTypes: a};
+   });
    var Tag = F2(function (a,b) {
       return {_: {},id: a,name: b};
    });
    _elm.Main.values = {_op: _op
                       ,Tag: Tag
+                      ,Model: Model
                       ,model: model
                       ,NoOp: NoOp
+                      ,Add: Add
                       ,update: update
                       ,header: header
                       ,tagItem: tagItem
@@ -4158,6 +4313,7 @@ Elm.Main.make = function (_elm) {
                       ,tagList: tagList
                       ,sidebar: sidebar
                       ,cards: cards
+                      ,newTagForm: newTagForm
                       ,view: view
                       ,main: main};
    return _elm.Main.values;
