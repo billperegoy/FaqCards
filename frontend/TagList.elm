@@ -1,12 +1,10 @@
-module Main where
+module TagList where
 
 import Html exposing (..)
 import Html.Attributes exposing (class, type', placeholder, name, value)
 import Html.Events exposing (..)
 import Signal exposing (Address)
 import StartApp.Simple exposing (start)
-
-import TagList exposing (..)
 
 -- Model
 type alias Tag =
@@ -74,16 +72,6 @@ update action model =
 
 
 -- View
-header : Html
-header =
-  div
-    [ class "faq-header" ]
-    [
-      h1
-        []
-        [text "FAQ Cards"]
-    ]
-
 tagItem : Tag -> Html
 tagItem tag =
   h1
@@ -113,33 +101,6 @@ sidebar address model =
     , newTagForm address model
     ]
 
-cards : Html
-cards =
-  div
-    [ class "faq-cards" ]
-    [
-      div
-        [ class "faq-card" ]
-        [ text "Card 1" ]
-    , div
-        [ class "faq-card" ]
-        [ text "Card 2" ]
-    , div
-        [ class "faq-card" ]
-        [ text "Card 3" ]
-    , div
-        [ class "faq-card" ]
-        [ text "Card 4" ]
-    , div
-        [ class "faq-card" ]
-        [ text "Card 5" ]
-    , div
-        [ class "faq-card" ]
-        [ text "Card 6" ]
-    ]
-
-
-
 newTagForm : Address Action -> Model -> Html
 newTagForm address model =
   div
@@ -159,24 +120,5 @@ newTagForm address model =
 
 view : Address Action -> Model -> Html
 view address model =
-  div
-    [ class "faq-container" ]
-    [
-      header
-    , div
-        [ class "faq-body" ]
-        [
-          sidebar address model,
-          cards
-        ]
-    ]
+  sidebar address model
 
-
--- Top level wiring
-main : Signal Html
-main =
-  start
-    { model = model
-    , update = update
-    , view = view
-  }
