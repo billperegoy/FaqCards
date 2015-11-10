@@ -31,9 +31,10 @@ model =
       , { id = 4, name = "rerun" }
       , { id = 5, name = "debug" }
       , { id = 6, name = "incisive" }
+      , { id = 6, name = "libraries" }
       ]
       , newTagInput = ""
-      , nextId = 7
+      , nextId = 8
   }
 
 
@@ -95,7 +96,7 @@ tagList model =
 sidebar : Address Action -> Model -> Html
 sidebar address model =
   div
-    [ class "faq-sidebar" ]
+    []
     [
       tagList model
     , newTagForm address model

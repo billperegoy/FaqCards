@@ -4168,12 +4168,12 @@ Elm.Main.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
-   $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $StartApp$Simple = Elm.StartApp.Simple.make(_elm);
+   $StartApp$Simple = Elm.StartApp.Simple.make(_elm),
+   $TagList = Elm.TagList.make(_elm);
    var cards = A2($Html.div,
    _L.fromArray([$Html$Attributes.$class("faq-cards")]),
    _L.fromArray([A2($Html.div,
@@ -4194,25 +4194,6 @@ Elm.Main.make = function (_elm) {
                 ,A2($Html.div,
                 _L.fromArray([$Html$Attributes.$class("faq-card")]),
                 _L.fromArray([$Html.text("Card 6")]))]));
-   var checkBox = A2($Html.input,
-   _L.fromArray([$Html$Attributes.type$("checkbox")]),
-   _L.fromArray([$Html.text("box")]));
-   var tagItem = function (tag) {
-      return A2($Html.h1,
-      _L.fromArray([]),
-      _L.fromArray([checkBox
-                   ,$Html.text(tag.name)]));
-   };
-   var tagList = function (model) {
-      return function () {
-         var tags = A2($List.map,
-         tagItem,
-         model.tagTypes);
-         return A2($Html.ul,
-         _L.fromArray([]),
-         tags);
-      }();
-   };
    var header = A2($Html.div,
    _L.fromArray([$Html$Attributes.$class("faq-header")]),
    _L.fromArray([A2($Html.h1,
@@ -4222,74 +4203,24 @@ Elm.Main.make = function (_elm) {
    model) {
       return function () {
          switch (action.ctor)
-         {case "Add":
-            return function () {
-                 var newTag = {_: {}
-                              ,id: model.nextId
-                              ,name: action._0};
-                 return _U.replace([["tagTypes"
-                                    ,A2($List._op["::"],
-                                    newTag,
-                                    model.tagTypes)]
-                                   ,["newTagInput",""]
-                                   ,["nextId",model.nextId + 1]],
-                 model);
-              }();
-            case "NoOp": return model;
-            case "UpdateTagInput":
-            return _U.replace([["newTagInput"
-                               ,action._0]],
-              model);}
+         {case "NoOp": return model;
+            case "Tags": return model;}
          _U.badCase($moduleName,
-         "between lines 53 and 71");
+         "between lines 31 and 36");
       }();
    });
-   var Add = function (a) {
-      return {ctor: "Add",_0: a};
+   var Tags = function (a) {
+      return {ctor: "Tags",_0: a};
    };
-   var UpdateTagInput = function (a) {
-      return {ctor: "UpdateTagInput"
-             ,_0: a};
-   };
-   var NoOp = {ctor: "NoOp"};
-   var onInput = F2(function (address,
-   f) {
-      return A3($Html$Events.on,
-      "input",
-      $Html$Events.targetValue,
-      function (v) {
-         return A2($Signal.message,
-         address,
-         f(v));
-      });
-   });
-   var newTagForm = F2(function (address,
-   model) {
-      return A2($Html.div,
-      _L.fromArray([]),
-      _L.fromArray([A2($Html.input,
-                   _L.fromArray([$Html$Attributes.type$("text")
-                                ,$Html$Attributes.placeholder("Tag Name")
-                                ,$Html$Attributes.value(model.newTagInput)
-                                ,$Html$Attributes.name("tag")
-                                ,A2(onInput,
-                                address,
-                                UpdateTagInput)]),
-                   _L.fromArray([]))
-                   ,A2($Html.button,
-                   _L.fromArray([A2($Html$Events.onClick,
-                   address,
-                   Add(model.newTagInput))]),
-                   _L.fromArray([$Html.text("New")]))]));
-   });
    var sidebar = F2(function (address,
    model) {
       return A2($Html.div,
       _L.fromArray([$Html$Attributes.$class("faq-sidebar")]),
-      _L.fromArray([tagList(model)
-                   ,A2(newTagForm,
-                   address,
-                   model)]));
+      _L.fromArray([A2($TagList.view,
+      A2($Signal.forwardTo,
+      address,
+      Tags),
+      model.tagList)]));
    });
    var view = F2(function (address,
    model) {
@@ -4303,50 +4234,25 @@ Elm.Main.make = function (_elm) {
                                 model)
                                 ,cards]))]));
    });
+   var NoOp = {ctor: "NoOp"};
    var model = {_: {}
-               ,newTagInput: ""
-               ,nextId: 7
-               ,tagTypes: _L.fromArray([{_: {}
-                                        ,id: 1
-                                        ,name: "gvp"}
-                                       ,{_: {},id: 2,name: "coverage"}
-                                       ,{_: {},id: 3,name: "waves"}
-                                       ,{_: {},id: 4,name: "rerun"}
-                                       ,{_: {},id: 5,name: "debug"}
-                                       ,{_: {}
-                                        ,id: 6
-                                        ,name: "incisive"}])};
+               ,tagList: $TagList.model};
    var main = $StartApp$Simple.start({_: {}
                                      ,model: model
                                      ,update: update
                                      ,view: view});
-   var Model = F3(function (a,
-   b,
-   c) {
-      return {_: {}
-             ,newTagInput: b
-             ,nextId: c
-             ,tagTypes: a};
-   });
-   var Tag = F2(function (a,b) {
-      return {_: {},id: a,name: b};
-   });
+   var Model = function (a) {
+      return {_: {},tagList: a};
+   };
    _elm.Main.values = {_op: _op
-                      ,Tag: Tag
                       ,Model: Model
                       ,model: model
-                      ,onInput: onInput
                       ,NoOp: NoOp
-                      ,UpdateTagInput: UpdateTagInput
-                      ,Add: Add
+                      ,Tags: Tags
                       ,update: update
                       ,header: header
-                      ,tagItem: tagItem
-                      ,checkBox: checkBox
-                      ,tagList: tagList
                       ,sidebar: sidebar
                       ,cards: cards
-                      ,newTagForm: newTagForm
                       ,view: view
                       ,main: main};
    return _elm.Main.values;
@@ -12672,6 +12578,165 @@ Elm.String.make = function (_elm) {
                         ,any: any
                         ,all: all};
    return _elm.String.values;
+};
+Elm.TagList = Elm.TagList || {};
+Elm.TagList.make = function (_elm) {
+   "use strict";
+   _elm.TagList = _elm.TagList || {};
+   if (_elm.TagList.values)
+   return _elm.TagList.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "TagList",
+   $Basics = Elm.Basics.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var checkBox = A2($Html.input,
+   _L.fromArray([$Html$Attributes.type$("checkbox")]),
+   _L.fromArray([$Html.text("box")]));
+   var tagItem = function (tag) {
+      return A2($Html.h1,
+      _L.fromArray([]),
+      _L.fromArray([checkBox
+                   ,$Html.text(tag.name)]));
+   };
+   var tagList = function (model) {
+      return function () {
+         var tags = A2($List.map,
+         tagItem,
+         model.tagTypes);
+         return A2($Html.ul,
+         _L.fromArray([]),
+         tags);
+      }();
+   };
+   var update = F2(function (action,
+   model) {
+      return function () {
+         switch (action.ctor)
+         {case "Add":
+            return function () {
+                 var newTag = {_: {}
+                              ,id: model.nextId
+                              ,name: action._0};
+                 return _U.replace([["tagTypes"
+                                    ,A2($List._op["::"],
+                                    newTag,
+                                    model.tagTypes)]
+                                   ,["newTagInput",""]
+                                   ,["nextId",model.nextId + 1]],
+                 model);
+              }();
+            case "NoOp": return model;
+            case "UpdateTagInput":
+            return _U.replace([["newTagInput"
+                               ,action._0]],
+              model);}
+         _U.badCase($moduleName,
+         "between lines 54 and 72");
+      }();
+   });
+   var Add = function (a) {
+      return {ctor: "Add",_0: a};
+   };
+   var UpdateTagInput = function (a) {
+      return {ctor: "UpdateTagInput"
+             ,_0: a};
+   };
+   var NoOp = {ctor: "NoOp"};
+   var onInput = F2(function (address,
+   f) {
+      return A3($Html$Events.on,
+      "input",
+      $Html$Events.targetValue,
+      function (v) {
+         return A2($Signal.message,
+         address,
+         f(v));
+      });
+   });
+   var newTagForm = F2(function (address,
+   model) {
+      return A2($Html.div,
+      _L.fromArray([]),
+      _L.fromArray([A2($Html.input,
+                   _L.fromArray([$Html$Attributes.type$("text")
+                                ,$Html$Attributes.placeholder("Tag Name")
+                                ,$Html$Attributes.value(model.newTagInput)
+                                ,$Html$Attributes.name("tag")
+                                ,A2(onInput,
+                                address,
+                                UpdateTagInput)]),
+                   _L.fromArray([]))
+                   ,A2($Html.button,
+                   _L.fromArray([A2($Html$Events.onClick,
+                   address,
+                   Add(model.newTagInput))]),
+                   _L.fromArray([$Html.text("New")]))]));
+   });
+   var sidebar = F2(function (address,
+   model) {
+      return A2($Html.div,
+      _L.fromArray([]),
+      _L.fromArray([tagList(model)
+                   ,A2(newTagForm,
+                   address,
+                   model)]));
+   });
+   var view = F2(function (address,
+   model) {
+      return A2(sidebar,
+      address,
+      model);
+   });
+   var model = {_: {}
+               ,newTagInput: ""
+               ,nextId: 8
+               ,tagTypes: _L.fromArray([{_: {}
+                                        ,id: 1
+                                        ,name: "gvp"}
+                                       ,{_: {},id: 2,name: "coverage"}
+                                       ,{_: {},id: 3,name: "waves"}
+                                       ,{_: {},id: 4,name: "rerun"}
+                                       ,{_: {},id: 5,name: "debug"}
+                                       ,{_: {},id: 6,name: "incisive"}
+                                       ,{_: {}
+                                        ,id: 6
+                                        ,name: "libraries"}])};
+   var Model = F3(function (a,
+   b,
+   c) {
+      return {_: {}
+             ,newTagInput: b
+             ,nextId: c
+             ,tagTypes: a};
+   });
+   var Tag = F2(function (a,b) {
+      return {_: {},id: a,name: b};
+   });
+   _elm.TagList.values = {_op: _op
+                         ,Tag: Tag
+                         ,Model: Model
+                         ,model: model
+                         ,onInput: onInput
+                         ,NoOp: NoOp
+                         ,UpdateTagInput: UpdateTagInput
+                         ,Add: Add
+                         ,update: update
+                         ,tagItem: tagItem
+                         ,checkBox: checkBox
+                         ,tagList: tagList
+                         ,sidebar: sidebar
+                         ,newTagForm: newTagForm
+                         ,view: view};
+   return _elm.TagList.values;
 };
 Elm.Task = Elm.Task || {};
 Elm.Task.make = function (_elm) {

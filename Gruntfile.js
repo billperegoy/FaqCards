@@ -15,7 +15,7 @@ module.exports = function(grunt) {
     elm: {
       compile: {
         files: {
-          "frontend/elm.js": ["frontend/Main.elm"]
+          "frontend/elm.js": ["frontend/*.elm"]
         }
       }
     },
