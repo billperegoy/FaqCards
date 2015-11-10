@@ -270,6 +270,84 @@ Elm.Basics.make = function (_elm) {
                         ,GT: GT};
    return _elm.Basics.values;
 };
+Elm.CardList = Elm.CardList || {};
+Elm.CardList.make = function (_elm) {
+   "use strict";
+   _elm.CardList = _elm.CardList || {};
+   if (_elm.CardList.values)
+   return _elm.CardList.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "CardList",
+   $Basics = Elm.Basics.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var cards = A2($Html.div,
+   _L.fromArray([$Html$Attributes.$class("faq-cards")]),
+   _L.fromArray([A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 1")]))
+                ,A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 2")]))
+                ,A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 3")]))
+                ,A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 4")]))
+                ,A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 5")]))
+                ,A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 6")]))
+                ,A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 6")]))
+                ,A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 6")]))
+                ,A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 6")]))
+                ,A2($Html.div,
+                _L.fromArray([$Html$Attributes.$class("faq-card")]),
+                _L.fromArray([$Html.text("Card 6")]))]));
+   var view = F2(function (address,
+   model) {
+      return cards;
+   });
+   var update = F2(function (action,
+   model) {
+      return function () {
+         switch (action.ctor)
+         {case "NoOp": return model;}
+         _U.badCase($moduleName,
+         "between lines 28 and 30");
+      }();
+   });
+   var NoOp = {ctor: "NoOp"};
+   var model = {_: {}
+               ,cardList: _L.fromArray([])};
+   var Model = function (a) {
+      return {_: {},cardList: a};
+   };
+   _elm.CardList.values = {_op: _op
+                          ,Model: Model
+                          ,model: model
+                          ,NoOp: NoOp
+                          ,update: update
+                          ,cards: cards
+                          ,view: view};
+   return _elm.CardList.values;
+};
 Elm.Char = Elm.Char || {};
 Elm.Char.make = function (_elm) {
    "use strict";
@@ -4166,6 +4244,7 @@ Elm.Main.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Main",
    $Basics = Elm.Basics.make(_elm),
+   $CardList = Elm.CardList.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
@@ -4174,26 +4253,6 @@ Elm.Main.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $StartApp$Simple = Elm.StartApp.Simple.make(_elm),
    $TagList = Elm.TagList.make(_elm);
-   var cards = A2($Html.div,
-   _L.fromArray([$Html$Attributes.$class("faq-cards")]),
-   _L.fromArray([A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 1")]))
-                ,A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 2")]))
-                ,A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 3")]))
-                ,A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 4")]))
-                ,A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 5")]))
-                ,A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 6")]))]));
    var header = A2($Html.div,
    _L.fromArray([$Html$Attributes.$class("faq-header")]),
    _L.fromArray([A2($Html.h1,
@@ -4203,12 +4262,26 @@ Elm.Main.make = function (_elm) {
    model) {
       return function () {
          switch (action.ctor)
-         {case "NoOp": return model;
-            case "Tags": return model;}
+         {case "Cards":
+            return _U.replace([["cardList"
+                               ,A2($CardList.update,
+                               action._0,
+                               model.cardList)]],
+              model);
+            case "NoOp": return model;
+            case "Tags":
+            return _U.replace([["tagList"
+                               ,A2($TagList.update,
+                               action._0,
+                               model.tagList)]],
+              model);}
          _U.badCase($moduleName,
-         "between lines 31 and 36");
+         "between lines 35 and 49");
       }();
    });
+   var Cards = function (a) {
+      return {ctor: "Cards",_0: a};
+   };
    var Tags = function (a) {
       return {ctor: "Tags",_0: a};
    };
@@ -4232,27 +4305,34 @@ Elm.Main.make = function (_elm) {
                    _L.fromArray([A2(sidebar,
                                 address,
                                 model)
-                                ,cards]))]));
+                                ,A2($CardList.view,
+                                A2($Signal.forwardTo,
+                                address,
+                                Cards),
+                                model.cardList)]))]));
    });
    var NoOp = {ctor: "NoOp"};
    var model = {_: {}
+               ,cardList: $CardList.model
                ,tagList: $TagList.model};
    var main = $StartApp$Simple.start({_: {}
                                      ,model: model
                                      ,update: update
                                      ,view: view});
-   var Model = function (a) {
-      return {_: {},tagList: a};
-   };
+   var Model = F2(function (a,b) {
+      return {_: {}
+             ,cardList: b
+             ,tagList: a};
+   });
    _elm.Main.values = {_op: _op
                       ,Model: Model
                       ,model: model
                       ,NoOp: NoOp
                       ,Tags: Tags
+                      ,Cards: Cards
                       ,update: update
                       ,header: header
                       ,sidebar: sidebar
-                      ,cards: cards
                       ,view: view
                       ,main: main};
    return _elm.Main.values;

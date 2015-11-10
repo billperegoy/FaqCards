@@ -7,17 +7,20 @@ import Signal exposing (Address)
 import StartApp.Simple exposing (start)
 
 import TagList exposing (..)
+import CardList exposing (..)
 
 -- Model
 type alias Model =
   {
     tagList: TagList.Model 
+  , cardList: CardList.Model
   }
 
 model : Model
 model =
   {
     tagList = TagList.model
+  , cardList = CardList.model
   }
 
 
@@ -25,6 +28,7 @@ model =
 type Action
   = NoOp
   | Tags TagList.Action
+  | Cards CardList.Action
 
 update : Action -> Model -> Model
 update action model =
@@ -33,7 +37,17 @@ update action model =
       model
 
     Tags action ->
-      model
+      {
+        model | 
+          tagList <- TagList.update action model.tagList 
+      }
+
+    Cards action ->
+      {
+        model | 
+          cardList <- CardList.update action model.cardList 
+      }
+
 
 -- View
 header : Html
@@ -54,32 +68,6 @@ sidebar address model =
       TagList.view (Signal.forwardTo address Tags) model.tagList
     ]
 
-cards : Html
-cards =
-  div
-    [ class "faq-cards" ]
-    [
-      div
-        [ class "faq-card" ]
-        [ text "Card 1" ]
-    , div
-        [ class "faq-card" ]
-        [ text "Card 2" ]
-    , div
-        [ class "faq-card" ]
-        [ text "Card 3" ]
-    , div
-        [ class "faq-card" ]
-        [ text "Card 4" ]
-    , div
-        [ class "faq-card" ]
-        [ text "Card 5" ]
-    , div
-        [ class "faq-card" ]
-        [ text "Card 6" ]
-    ]
-
-
 view : Address Action -> Model -> Html
 view address model =
   div
@@ -90,7 +78,7 @@ view address model =
         [ class "faq-body" ]
         [
           sidebar address model
-        , cards
+        , CardList.view (Signal.forwardTo address Cards) model.cardList
         ]
     ]
 
