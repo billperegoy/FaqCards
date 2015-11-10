@@ -12,24 +12,26 @@
 
 .faq-body {
   @include span-columns(12);
-  height: 800px;
+  border: solid 1px;
 }
 
 .faq-sidebar {
   @include span-columns(3);
   border: solid 1px;
-  height: 800px;
 }
 
 .faq-cards {
   @include span-columns(9);
+  @include display(flex);
+  @include flex-direction(row);
+  @include flex-flow(row wrap);
+  @include justify-content(flex-start);
   border: solid 1px;
-  height: 800px;
 }
 
 .faq-card {
-  @include span-columns(3);
   border: solid 1px;
+  width: 200px;
   height: 40px;
 }
 
