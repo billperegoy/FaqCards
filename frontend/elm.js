@@ -270,6 +270,64 @@ Elm.Basics.make = function (_elm) {
                         ,GT: GT};
    return _elm.Basics.values;
 };
+Elm.Card = Elm.Card || {};
+Elm.Card.make = function (_elm) {
+   "use strict";
+   _elm.Card = _elm.Card || {};
+   if (_elm.Card.values)
+   return _elm.Card.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Card",
+   $Basics = Elm.Basics.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var view = F2(function (address,
+   model) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("faq-card")]),
+      _L.fromArray([$Html.text(model.question)]));
+   });
+   var update = F2(function (action,
+   model) {
+      return function () {
+         switch (action.ctor)
+         {case "NoOp": return model;}
+         _U.badCase($moduleName,
+         "between lines 33 and 35");
+      }();
+   });
+   var NoOp = {ctor: "NoOp"};
+   var model = {_: {}
+               ,answer: "It\'s hard to say."
+               ,id: 0
+               ,question: "What is life?"
+               ,tags: _L.fromArray(["verilog"
+                                   ,"libraries"])};
+   var Model = F4(function (a,
+   b,
+   c,
+   d) {
+      return {_: {}
+             ,answer: c
+             ,id: a
+             ,question: b
+             ,tags: d};
+   });
+   _elm.Card.values = {_op: _op
+                      ,Model: Model
+                      ,model: model
+                      ,NoOp: NoOp
+                      ,update: update
+                      ,view: view};
+   return _elm.Card.values;
+};
 Elm.CardList = Elm.CardList || {};
 Elm.CardList.make = function (_elm) {
    "use strict";
@@ -282,67 +340,125 @@ Elm.CardList.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "CardList",
    $Basics = Elm.Basics.make(_elm),
+   $Card = Elm.Card.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
-   var cards = A2($Html.div,
-   _L.fromArray([$Html$Attributes.$class("faq-cards")]),
-   _L.fromArray([A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 1")]))
-                ,A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 2")]))
-                ,A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 3")]))
-                ,A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 4")]))
-                ,A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 5")]))
-                ,A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 6")]))
-                ,A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 6")]))
-                ,A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 6")]))
-                ,A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 6")]))
-                ,A2($Html.div,
-                _L.fromArray([$Html$Attributes.$class("faq-card")]),
-                _L.fromArray([$Html.text("Card 6")]))]));
-   var view = F2(function (address,
-   model) {
-      return cards;
-   });
    var update = F2(function (action,
    model) {
       return function () {
          switch (action.ctor)
-         {case "NoOp": return model;}
+         {case "Card": return model;
+            case "NoOp": return model;}
          _U.badCase($moduleName,
-         "between lines 28 and 30");
+         "between lines 45 and 50");
       }();
+   });
+   var Card = function (a) {
+      return {ctor: "Card",_0: a};
+   };
+   var cards = F2(function (address,
+   model) {
+      return function () {
+         var cardHtml = function (model) {
+            return A2($List.map,
+            $Card.view(A2($Signal.forwardTo,
+            address,
+            Card)),
+            model.cards);
+         };
+         return A2($Html.div,
+         _L.fromArray([$Html$Attributes.$class("faq-cards")]),
+         cardHtml(model));
+      }();
+   });
+   var view = F2(function (address,
+   model) {
+      return A2($Html.div,
+      _L.fromArray([]),
+      _L.fromArray([A2(cards,
+      address,
+      model)]));
    });
    var NoOp = {ctor: "NoOp"};
    var model = {_: {}
-               ,cardList: _L.fromArray([])};
+               ,cards: _L.fromArray([A4($Card.Model,
+                                    1,
+                                    "question1",
+                                    "answer1",
+                                    _L.fromArray(["tag1","tag2"]))
+                                    ,A4($Card.Model,
+                                    2,
+                                    "question2",
+                                    "answer2",
+                                    _L.fromArray(["tag1","tag2"]))
+                                    ,A4($Card.Model,
+                                    3,
+                                    "question3",
+                                    "answer3",
+                                    _L.fromArray(["tag1","tag2"]))
+                                    ,A4($Card.Model,
+                                    4,
+                                    "question4",
+                                    "answer4",
+                                    _L.fromArray(["tag1","tag2"]))
+                                    ,A4($Card.Model,
+                                    5,
+                                    "question5",
+                                    "answer5",
+                                    _L.fromArray(["tag1","tag2"]))
+                                    ,A4($Card.Model,
+                                    6,
+                                    "question6",
+                                    "answer6",
+                                    _L.fromArray(["tag1","tag2"]))
+                                    ,A4($Card.Model,
+                                    7,
+                                    "question7",
+                                    "answer7",
+                                    _L.fromArray(["tag1","tag2"]))
+                                    ,A4($Card.Model,
+                                    8,
+                                    "question8",
+                                    "answer8",
+                                    _L.fromArray(["tag1","tag2"]))
+                                    ,A4($Card.Model,
+                                    9,
+                                    "question9",
+                                    "answer9",
+                                    _L.fromArray(["tag1","tag2"]))
+                                    ,A4($Card.Model,
+                                    10,
+                                    "question10",
+                                    "answer10",
+                                    _L.fromArray(["tag1","tag2"]))
+                                    ,A4($Card.Model,
+                                    11,
+                                    "question11",
+                                    "answer11",
+                                    _L.fromArray(["tag1","tag2"]))
+                                    ,A4($Card.Model,
+                                    12,
+                                    "question12",
+                                    "answer12",
+                                    _L.fromArray(["tag1","tag2"]))
+                                    ,A4($Card.Model,
+                                    13,
+                                    "question13",
+                                    "answer13",
+                                    _L.fromArray(["tag1"
+                                                 ,"tag2"]))])};
    var Model = function (a) {
-      return {_: {},cardList: a};
+      return {_: {},cards: a};
    };
    _elm.CardList.values = {_op: _op
                           ,Model: Model
                           ,model: model
                           ,NoOp: NoOp
+                          ,Card: Card
                           ,update: update
                           ,cards: cards
                           ,view: view};
@@ -4282,6 +4398,14 @@ Elm.Main.make = function (_elm) {
    var Cards = function (a) {
       return {ctor: "Cards",_0: a};
    };
+   var cards = F2(function (address,
+   model) {
+      return A2($CardList.view,
+      A2($Signal.forwardTo,
+      address,
+      Cards),
+      model.cardList);
+   });
    var Tags = function (a) {
       return {ctor: "Tags",_0: a};
    };
@@ -4305,11 +4429,7 @@ Elm.Main.make = function (_elm) {
                    _L.fromArray([A2(sidebar,
                                 address,
                                 model)
-                                ,A2($CardList.view,
-                                A2($Signal.forwardTo,
-                                address,
-                                Cards),
-                                model.cardList)]))]));
+                                ,A2(cards,address,model)]))]));
    });
    var NoOp = {ctor: "NoOp"};
    var model = {_: {}
@@ -4333,6 +4453,7 @@ Elm.Main.make = function (_elm) {
                       ,update: update
                       ,header: header
                       ,sidebar: sidebar
+                      ,cards: cards
                       ,view: view
                       ,main: main};
    return _elm.Main.values;
@@ -12720,7 +12841,7 @@ Elm.TagList.make = function (_elm) {
                                ,action._0]],
               model);}
          _U.badCase($moduleName,
-         "between lines 54 and 72");
+         "between lines 53 and 71");
       }();
    });
    var Add = function (a) {

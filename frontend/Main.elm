@@ -68,6 +68,10 @@ sidebar address model =
       TagList.view (Signal.forwardTo address Tags) model.tagList
     ]
 
+cards : Address Action -> Model -> Html
+cards address model =
+  CardList.view (Signal.forwardTo address Cards) model.cardList
+
 view : Address Action -> Model -> Html
 view address model =
   div
@@ -78,8 +82,9 @@ view address model =
         [ class "faq-body" ]
         [
           sidebar address model
-        , CardList.view (Signal.forwardTo address Cards) model.cardList
+        , cards address model
         ]
+
     ]
 
 

@@ -4,7 +4,6 @@ import Html exposing (..)
 import Html.Attributes exposing (class, type', placeholder, name, value)
 import Html.Events exposing (..)
 import Signal exposing (Address)
-import StartApp.Simple exposing (start)
 
 -- Model
 type alias Tag =
