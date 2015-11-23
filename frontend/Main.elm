@@ -98,18 +98,24 @@ cards address model =
 
 view : Address Action -> Model -> Html
 view address model =
-  div
-    [ class "faq-container" ]
-    [
-      header
-    , div
-        [ class "faq-body" ]
-        [
-          sidebar address model
-        , cards address model
-        ]
-    , footer address
-    , NewCardModal.view (Signal.forwardTo address Modal) model.modal
+  div []
+  [
+    div
+      [ class "faq-container" ]
+      [
+        header
+      , div
+          [ class "faq-body" ]
+          [
+            sidebar address model
+          , cards address model
+          ]
+      , footer address
+      ],
+      div []
+      [
+         NewCardModal.view (Signal.forwardTo address Modal) model.modal
+      ]
     ]
 
 

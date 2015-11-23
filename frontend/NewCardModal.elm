@@ -8,11 +8,11 @@ import Signal exposing (Address)
 -- Model
 type alias Model =
   {
-    invisible: Bool
+    visible: Bool
   }
 
 model : Model
-model = { invisible = True }
+model = { visible = False }
 
 -- Update
 type Action
@@ -27,10 +27,10 @@ update action model =
       model
 
     Show ->
-      { model | invisible <- False }
+      { model | visible <- True }
 
     Hide ->
-      { model | invisible <- True }
+      { model | visible <- False }
 
 -- View
 formHtml: Address Action -> List Html
@@ -47,16 +47,19 @@ formHtml address =
 
 view : Address Action -> Model -> Html
 view address model =
-  div 
-    [ class "faq-new-crd-modal"]
-    [
-      div
-        [ 
-          classList 
-          [
-            ("faq-new-card-form", True),
-            ("faq-new-card-form-invisible", model.invisible)
-          ] 
-        ]
-        (formHtml address)
+  div [ class "faq-new-card-modal-background" ] [
+    div 
+      [ class "faq-new-card-modal"]
+      [
+        div
+          [ 
+            classList 
+            [
+              ("faq-new-card-form", True)
+            , ("faq-new-card-form-invisible", not model.visible)
+            , ("faq-new-card-form-visible", model.visible)
+            ] 
+          ]
+          (formHtml address)
+      ]
     ]

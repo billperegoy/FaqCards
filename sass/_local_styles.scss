@@ -40,21 +40,39 @@
   float: right;
 }
 
-.faq-new-card-modal {
+.faq-new-card-modal-background {
   @include span-columns(12);
 }
 
+.faq-new-card-modal + .faq-new-card-form-visible {
+  background-color: black;
+}
+
 .faq-new-card-form:hover {
-  @include animation(scale 1.0s ease-in, slide 2.0s ease);
 }
 
 .faq-new-card-form {
   @include span-columns(3);
+  @include border-top-radius(10px);
+  @include border-bottom-radius(10px);
+  @include border-left-radius(10px);
+  @include border-right-radius(10px);
   margin-top: 50px;
   padding: 20px;
   border: solid 1px;
 }
 
+
+.faq-new-card-form-visible {
+  @include transition (opacity 1.0s ease-in-out);
+  background-color: rgba(#000, 0.25);
+  z-index: 1000;
+  //opacity: 1;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+}
+
 .faq-new-card-form-invisible {
-  display: none;
+  opacity: 0;
 }
