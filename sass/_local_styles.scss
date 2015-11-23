@@ -35,3 +35,22 @@
   height: 40px;
 }
 
+.faq-new-card {
+  margin-top: 20px;
+  float: right;
+}
+
+.faq-new-card-modal {
+  @include span-columns(12);
+}
+
+.faq-new-card-form {
+  @include span-columns(3);
+  margin-top: 50px;
+  padding: 20px;
+  border: solid 1px;
+}
+
+.faq-new-card-form-invisible {
+  display: none;
+}

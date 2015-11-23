@@ -12,17 +12,8 @@ type alias Model =
   , question: String
   , answer: String
   , tags: List String
+  , nextId: Int
   }
-
-model : Model
-model =
-  {
-    id = 0
-  , question = "What is life?"
-  , answer = "It's hard to say."
-  , tags = ["verilog", "libraries"]
-  }
-
 
 -- Update
 type Action

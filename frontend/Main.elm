@@ -1,19 +1,22 @@
 module Main where
 
 import Html exposing (..)
-import Html.Attributes exposing (class, type', placeholder, name, value)
+import Html.Attributes exposing (class, classList, type', placeholder, name, value)
 import Html.Events exposing (..)
 import Signal exposing (Address)
 import StartApp.Simple exposing (start)
 
 import TagList exposing (..)
 import CardList exposing (..)
+import NewCardModal exposing (..)
+
 
 -- Model
 type alias Model =
   {
     tagList: TagList.Model 
   , cardList: CardList.Model
+  , modal: NewCardModal.Model
   }
 
 model : Model
@@ -21,6 +24,7 @@ model =
   {
     tagList = TagList.model
   , cardList = CardList.model
+  , modal = NewCardModal.model
   }
 
 
@@ -29,6 +33,7 @@ type Action
   = NoOp
   | Tags TagList.Action
   | Cards CardList.Action
+  | Modal NewCardModal.Action
 
 update : Action -> Model -> Model
 update action model =
@@ -48,6 +53,12 @@ update action model =
           cardList <- CardList.update action model.cardList 
       }
 
+    Modal action ->
+      {
+        model | 
+          modal <- NewCardModal.update action model.modal
+      }
+
 
 -- View
 header : Html
@@ -59,6 +70,14 @@ header =
         []
         [text "FAQ Cards"]
     ]
+
+footer : Html
+footer =
+    div
+      [ class "faq-footer"]
+      [ 
+        button [ class "faq-new-card" ] [text "New Card"] 
+      ] 
 
 sidebar : Address Action -> Model -> Html
 sidebar address model =
@@ -84,7 +103,8 @@ view address model =
           sidebar address model
         , cards address model
         ]
-
+    , footer
+    , NewCardModal.view (Signal.forwardTo address Modal) model.modal
     ]
 
 
