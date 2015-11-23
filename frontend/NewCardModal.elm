@@ -8,11 +8,11 @@ import Signal exposing (Address)
 -- Model
 type alias Model =
   {
-    visible: Bool
+    invisible: Bool
   }
 
 model : Model
-model = { visible = True }
+model = { invisible = True }
 
 -- Update
 type Action
@@ -27,12 +27,24 @@ update action model =
       model
 
     Show ->
-      { model | visible <- True }
+      { model | invisible <- False }
 
     Hide ->
-      { model | visible <- False }
+      { model | invisible <- True }
 
 -- View
+formHtml: Address Action -> List Html
+formHtml address =
+  [
+          label [] [ text "Question" ]
+        , input [] []  
+        , label [] [ text "Answer" ]
+        , input [] []  
+        , button 
+            [ onClick address Hide ]
+            [ text "Submit" ]
+  ]
+
 view : Address Action -> Model -> Html
 view address model =
   div 
@@ -43,14 +55,8 @@ view address model =
           classList 
           [
             ("faq-new-card-form", True),
-            ("faq-new-card-form-invisible", False)
+            ("faq-new-card-form-invisible", model.invisible)
           ] 
         ]
-        [
-          label [] [ text "Question" ]
-        , input [] []  
-        , label [] [ text "Answer" ]
-        , input [] []  
-        , button [] [ text "Submit" ]
-        ]
+        (formHtml address)
     ]

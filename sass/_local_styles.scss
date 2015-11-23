@@ -44,6 +44,10 @@
   @include span-columns(12);
 }
 
+.faq-new-card-form:hover {
+  @include animation(scale 1.0s ease-in, slide 2.0s ease);
+}
+
 .faq-new-card-form {
   @include span-columns(3);
   margin-top: 50px;

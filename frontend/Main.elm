@@ -71,12 +71,17 @@ header =
         [text "FAQ Cards"]
     ]
 
-footer : Html
-footer =
+footer : Address Action -> Html
+footer address =
     div
       [ class "faq-footer"]
       [ 
-        button [ class "faq-new-card" ] [text "New Card"] 
+        button 
+          [ 
+            class "faq-new-card" ,
+            onClick address (Modal Show)
+          ] 
+          [ text "New Card" ] 
       ] 
 
 sidebar : Address Action -> Model -> Html
@@ -103,7 +108,7 @@ view address model =
           sidebar address model
         , cards address model
         ]
-    , footer
+    , footer address
     , NewCardModal.view (Signal.forwardTo address Modal) model.modal
     ]
 
