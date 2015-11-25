@@ -12,7 +12,6 @@ type alias Model =
   , question: String
   , answer: String
   , tags: List String
-  , nextId: Int
   }
 
 -- Update
