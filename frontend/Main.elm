@@ -76,12 +76,14 @@ footer address =
     div
       [ class "faq-footer"]
       [ 
+        {--
         button 
           [ 
             class "faq-new-card" ,
             onClick address (Modal Show)
           ] 
           [ text "New Card" ] 
+        --}
       ] 
 
 sidebar : Address Action -> Model -> Html

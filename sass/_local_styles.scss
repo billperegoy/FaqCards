@@ -22,6 +22,7 @@
 
 .faq-cards {
   @include span-columns(9);
+  @include omega();
   @include display(flex);
   @include flex-direction(row);
   @include flex-flow(row wrap);
@@ -35,11 +36,14 @@
   height: 40px;
 }
 
-.faq-new-card {
+.faq-new-card-button {
+  display: block;
   margin-top: 20px;
-  float: right;
 }
 
+
+/*
+// FIXME - all of this new card modal stuff isn't currently used
 .faq-new-card-modal-background {
   @include span-columns(12);
 }
@@ -76,3 +80,4 @@
 .faq-new-card-form-invisible {
   opacity: 0;
 }
+*/

@@ -22,16 +22,16 @@ model =
     cards = 
       [
         Card.Model 1 "question1" "answer1" ["tag1", "tag2"]
-      , Card.Model 2 "question2" "answer2" ["tag1", "tag2"]
+      , Card.Model 2 "a-question2" "answer2" ["tag1", "tag2"]
       , Card.Model 3 "question3" "answer3" ["tag1", "tag2"]
       , Card.Model 4 "question4" "answer4" ["tag1", "tag2"]
       , Card.Model 5 "question5" "answer5" ["tag1", "tag2"]
       , Card.Model 6 "question6" "answer6" ["tag1", "tag2"]
-      , Card.Model 7 "question7" "answer7" ["tag1", "tag2"]
+      , Card.Model 7 "b-question7" "answer7" ["tag1", "tag2"]
       , Card.Model 8 "question8" "answer8" ["tag1", "tag2"]
       , Card.Model 9 "question9" "answer9" ["tag1", "tag2"]
       , Card.Model 10 "question10" "answer10" ["tag1", "tag2"]
-      , Card.Model 11 "question11" "answer11" ["tag1", "tag2"]
+      , Card.Model 11 "y-question11" "answer11" ["tag1", "tag2"]
       , Card.Model 12 "question12" "answer12" ["tag1", "tag2"]
       , Card.Model 13 "question13" "answer13" ["tag1", "tag2"]
       ]
@@ -62,27 +62,32 @@ update action model =
       in
         {
           model |
-          -- FIXME - how do I append to the end of the list?
-          cards <- newCard :: model.cards
+          cards <- List.append model.cards [ newCard ] 
         , newQuestionInput <- ""
         , newAnswerInput <- ""
         , nextId <- model.nextId + 1
         }
 
 -- View
+newCardButton: Address Action -> Html
+newCardButton address =
+  button [ class "faq-new-card-button", onClick address (Add "new question x" "new answer y" []) ] [text "New Card"]
+
 cards : Address Action -> Model -> Html
 cards address model =
-  let html model =
-    List.map (Card.view (Signal.forwardTo address Card)) model.cards
+  let cardsHtml model =
+    List.sortBy .question model.cards
+    |> List.map (Card.view (Signal.forwardTo address Card))
   in
-    div [][
     div
       [ class "faq-cards" ]
-      (html model)
-      , button [ onClick address (Add "new question x" "new answer y" []) ] [text "New Card"]
-    ]
+      (cardsHtml model)
 
 
 view : Address Action -> Model -> Html
 view address model =
-  cards address model 
+  div [class "faq-cards-and-button"]
+    [
+      cards address model 
+    , newCardButton address
+    ]

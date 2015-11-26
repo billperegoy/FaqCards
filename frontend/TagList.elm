@@ -88,7 +88,8 @@ checkBox =
 tagList : Model -> Html
 tagList model =
   let tags =
-    List.map tagItem model.tagTypes
+    List.sortBy .name model.tagTypes 
+    |> List.map tagItem 
   in
      ul [] tags
 
