@@ -1,9 +1,10 @@
 module TagList where
 
 import Html exposing (..)
-import Html.Attributes exposing (class, type', placeholder, name, value)
+import Html.Attributes exposing (class, classList, type', placeholder, name, value)
 import Html.Events exposing (..)
 import Signal exposing (Address)
+import String exposing (..)
 
 -- Model
 type alias Tag =
@@ -16,6 +17,7 @@ type alias Model =
   {
     tagTypes:List Tag
   , newTagInput : String
+  , tagValidateText : String
   , nextId: Int
   }
 
@@ -30,9 +32,10 @@ model =
       , { id = 4, name = "rerun" }
       , { id = 5, name = "debug" }
       , { id = 6, name = "incisive" }
-      , { id = 6, name = "libraries" }
+      , { id = 7, name = "libraries" }
       ]
       , newTagInput = ""
+      , tagValidateText = "validation"
       , nextId = 8
   }
 
@@ -41,6 +44,18 @@ model =
 onInput : Address a -> (String -> a) -> Attribute
 onInput address f =
   on "input" targetValue (\v -> Signal.message address (f v))
+
+nameIsNotBlank : String -> Bool
+nameIsNotBlank name =
+  String.length name  > 0
+
+nameIsNotDuplicate : Model -> String -> Bool
+nameIsNotDuplicate model name =
+  List.all (\elem -> elem.name /= name) model.tagTypes
+
+validateName : Model -> String -> Bool
+validateName model name =
+  nameIsNotBlank name && nameIsNotDuplicate model name
 
 -- Update
 type Action
@@ -63,12 +78,15 @@ update action model =
       let newTag =
         { id = model.nextId, name = name }
       in
-        {
-          model |
-            tagTypes <- newTag :: model.tagTypes
-          , newTagInput <- ""
-          , nextId <- model.nextId + 1
-        }
+        if validateName model name then
+          {
+            model |
+              tagTypes <- newTag :: model.tagTypes
+            , newTagInput <- ""
+            , nextId <- model.nextId + 1
+          }
+        else
+          model
 
 
 -- View
@@ -102,6 +120,14 @@ sidebar address model =
     , newTagForm address model
     ]
 
+tagValidateMessage : Model -> Html
+tagValidateMessage model =
+  div 
+    [ class "faq-tag-validate-fail" ]
+    [
+      text model.tagValidateText
+    ]
+
 newTagForm : Address Action -> Model -> Html
 newTagForm address model =
   div
@@ -115,6 +141,7 @@ newTagForm address model =
         onInput address UpdateTagInput
       ]
       []
+    , tagValidateMessage model
     , button [ onClick address (Add model.newTagInput) ] [text "New" ]
     ]
 
