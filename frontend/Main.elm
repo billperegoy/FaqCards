@@ -116,7 +116,8 @@ view address model =
       ],
       div []
       [
-         NewCardModal.view (Signal.forwardTo address Modal) model.modal
+        -- FIXME - This needs to be actived and displaed as a static form next
+        --NewCardModal.view (Signal.forwardTo address Modal) model.modal
       ]
     ]
 
