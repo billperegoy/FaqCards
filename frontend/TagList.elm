@@ -35,7 +35,7 @@ model =
       , { id = 7, name = "libraries" }
       ]
       , newTagInput = ""
-      , tagValidateText = "validation"
+      , tagValidateText = ""
       , nextId = 8
   }
 
@@ -45,6 +45,7 @@ onInput : Address a -> (String -> a) -> Attribute
 onInput address f =
   on "input" targetValue (\v -> Signal.message address (f v))
 
+-- Update helper functions
 nameIsNotBlank : String -> Bool
 nameIsNotBlank name =
   String.length name  > 0
@@ -57,11 +58,33 @@ validateName : Model -> String -> Bool
 validateName model name =
   nameIsNotBlank name && nameIsNotDuplicate model name
 
+displayValidateError : Model -> Model
+displayValidateError model =
+  {
+    model |
+      tagValidateText <- "Bad input - try again"
+    , newTagInput <- ""
+  }
+
+addNewTag : Model -> String -> Model
+addNewTag model name =
+  let newTag =
+    { id = model.nextId, name = name }
+  in
+  {
+    model |
+      tagTypes <- newTag :: model.tagTypes
+    , newTagInput <- ""
+    , nextId <- model.nextId + 1
+    , tagValidateText <- ""
+  }
+
 -- Update
 type Action
   = NoOp
   | UpdateTagInput String
   | Add String
+
 
 update : Action -> Model -> Model
 update action model =
@@ -75,18 +98,10 @@ update action model =
       }
 
     Add name ->
-      let newTag =
-        { id = model.nextId, name = name }
-      in
-        if validateName model name then
-          {
-            model |
-              tagTypes <- newTag :: model.tagTypes
-            , newTagInput <- ""
-            , nextId <- model.nextId + 1
-          }
-        else
-          model
+      if validateName model name then 
+        addNewTag model name
+      else 
+        displayValidateError model
 
 
 -- View
