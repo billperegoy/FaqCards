@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (class, type', placeholder, name, value)
 import Html.Events exposing (..)
 import Signal exposing (Address)
+import String exposing (..)
 
 import Card exposing (..)
 
@@ -38,14 +39,43 @@ model =
       ]
   , newQuestionInput = ""
   , newAnswerInput = ""
-  , cardValidateText = "foo"
-  , nextId = 15
+  , cardValidateText = ""
+  , nextId = 14
   }
 
 -- Utilities
 onInput : Address a -> (String -> a) -> Attribute
 onInput address f =
   on "input" targetValue (\v -> Signal.message address (f v))
+
+-- Validation Helper Functions
+validateFormInput: Model -> Bool
+validateFormInput model =
+  (String.length model.newQuestionInput > 0) &&
+    (String.length model.newAnswerInput > 0)
+
+-- Update Helper Functions
+addNewCard: Model -> Model
+addNewCard model =
+  let newCard =
+    Card.Model model.nextId model.newQuestionInput model.newAnswerInput []
+  in 
+    {
+      model |
+      cards <- List.append model.cards [ newCard ] 
+    , newQuestionInput <- ""
+    , newAnswerInput <- ""
+    , nextId <- model.nextId + 1
+    }
+
+displayValidateError: Model -> Model
+displayValidateError model =
+  {
+    model |
+      cardValidateText <- "Bad input - try again"
+    , newQuestionInput <- ""
+    , newAnswerInput <- ""
+  }
 
 -- Update
 type Action
@@ -65,16 +95,10 @@ update action model =
       model
 
     Add model ->
-      let newCard =
-        Card.Model model.nextId model.newQuestionInput model.newAnswerInput []
-      in
-        {
-          model |
-          cards <- List.append model.cards [ newCard ] 
-        , newQuestionInput <- ""
-        , newAnswerInput <- ""
-        , nextId <- model.nextId + 1
-        }
+      if validateFormInput model then
+        addNewCard model
+      else
+        displayValidateError model
 
     UpdateQuestionInput question ->
       {
@@ -127,6 +151,11 @@ newFormButton address model =
     [onClick address (Add model) ] 
     [text "New Card"]
 
+cardValidateMessage: Model -> Html
+cardValidateMessage model =
+  div 
+    []
+    [ text model.cardValidateText ]
 
 newCardForm: Address Action -> Model -> Html
 newCardForm address model =
@@ -135,6 +164,7 @@ newCardForm address model =
     [
       questionFormElement address model
     , answerFormElement address model
+    , cardValidateMessage model
     , newFormButton address model
     ]
 
