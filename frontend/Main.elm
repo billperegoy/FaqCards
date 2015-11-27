@@ -10,7 +10,6 @@ import TagList exposing (..)
 import CardList exposing (..)
 import NewCardModal exposing (..)
 
-
 -- Model
 type alias Model =
   {
