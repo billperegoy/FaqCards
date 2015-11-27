@@ -6,6 +6,10 @@ import Html.Events exposing (..)
 import Signal exposing (Address)
 import StartApp.Simple exposing (start)
 
+import ElmTest.Test exposing  (..)
+import ElmTest.Assertion exposing (..)
+import ElmTest.Runner.Element exposing (..)
+
 import TagList exposing (..)
 import CardList exposing (..)
 import NewCardModal exposing (..)

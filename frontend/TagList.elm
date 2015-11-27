@@ -6,6 +6,8 @@ import Html.Events exposing (..)
 import Signal exposing (Address)
 import String exposing (..)
 
+import Validations exposing (..)
+
 -- Model
 type alias Tag =
   {
@@ -46,17 +48,16 @@ onInput address f =
   on "input" targetValue (\v -> Signal.message address (f v))
 
 -- Update helper functions
-nameIsNotBlank : String -> Bool
-nameIsNotBlank name =
-  String.length name  > 0
-
 nameIsNotDuplicate : Model -> String -> Bool
 nameIsNotDuplicate model name =
   List.all (\elem -> elem.name /= name) model.tagTypes
 
 validateName : Model -> String -> Bool
 validateName model name =
-  nameIsNotBlank name && nameIsNotDuplicate model name
+  let 
+    result = Validations.run name
+  in
+    (fst result == "ok") && (nameIsNotDuplicate model name)
 
 displayValidateError : Model -> Model
 displayValidateError model =

@@ -1,6 +1,7 @@
 module Validations where
 
 import String exposing (..)
+import Regex exposing (..)
 
 {--
   A validate result consists of a tuple of this form:
@@ -27,29 +28,43 @@ type alias ValidateRule =
   , errorString: String
   }
 
-notEmptyRule : ValidateRule
-notEmptyRule =
+-- Define a couple of validation rules
+spaceRegex : Regex
+spaceRegex = Regex.regex "\\s"
+
+emptyRule : ValidateRule
+emptyRule =
   {
-    name = "not_empty"
-  , rule = (\name -> String.length name > 0)
+    name = "empty"
+  , rule = (\name -> String.length name == 0)
   , errorString = "cannot be empty"
   }
 
-validateSingleRule : String -> ValidateRule -> ValidateResult
-validateSingleRule name rule =
-  if rule.rule name then
-     ("ok", [])
-  else
-     ("error", [ rule.errorString ])
+hasSpacesRule : ValidateRule
+hasSpacesRule =
+  {
+    name = "has_spaces"
+  , rule = (\name -> Regex.contains spaceRegex name)
+  , errorString = "cannot contain spaces"
+  }
 
--- getErrorStrings : ValidateResult 
+-- Take a srring and a list of rues and return a result
 validateMultipleRules : String -> List ValidateRule -> ValidateResult
 validateMultipleRules name rules =
   let 
-    results = List.map (\r -> r.errorString) rules
+    results = List.filter (\r -> r.rule name) rules 
+           |> List.map .errorString
   in
-    ("ok", results)
+    if List.length results == 0 then
+      ("ok", results)
+    else
+      ("error", results)
 
+allRules : List ValidateRule
+allRules =
+  [ emptyRule, hasSpacesRule]
+
+-- Do a simple query
 run : String -> ValidateResult
 run name = 
-  validateSingleRule name notEmptyRule
+  validateMultipleRules name allRules 
