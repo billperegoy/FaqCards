@@ -13,6 +13,7 @@ type alias Model =
     cards: List Card.Model
   , newQuestionInput: String
   , newAnswerInput: String
+  , cardValidateText: String
   , nextId: Int
   }
 
@@ -35,17 +36,24 @@ model =
       , Card.Model 12 "question12" "answer12" ["tag1", "tag2"]
       , Card.Model 13 "question13" "answer13" ["tag1", "tag2"]
       ]
-  , newQuestionInput = "question"
-  , newAnswerInput = "answer"
+  , newQuestionInput = ""
+  , newAnswerInput = ""
+  , cardValidateText = "foo"
   , nextId = 15
   }
 
+-- Utilities
+onInput : Address a -> (String -> a) -> Attribute
+onInput address f =
+  on "input" targetValue (\v -> Signal.message address (f v))
 
 -- Update
 type Action
   = NoOp
   | Card Card.Action
-  | Add String String (List String)
+  | Add Model 
+  | UpdateQuestionInput String
+  | UpdateAnswerInput String
 
 update : Action -> Model -> Model
 update action model =
@@ -56,9 +64,9 @@ update action model =
     Card action ->
       model
 
-    Add question answer tags ->
+    Add model ->
       let newCard =
-        Card.Model model.nextId question answer tags
+        Card.Model model.nextId model.newQuestionInput model.newAnswerInput []
       in
         {
           model |
@@ -68,10 +76,67 @@ update action model =
         , nextId <- model.nextId + 1
         }
 
+    UpdateQuestionInput question ->
+      {
+        model |
+          newQuestionInput <- question
+      }
+
+    UpdateAnswerInput answer ->
+      {
+        model |
+          newAnswerInput <- answer 
+      }
+
 -- View
-newCardButton: Address Action -> Html
-newCardButton address =
-  button [ class "faq-new-card-button", onClick address (Add "new question x" "new answer y" []) ] [text "New Card"]
+questionFormElement: Address Action -> Model -> Html
+questionFormElement address model =
+  div 
+    []
+    [
+      label [] [text "question"]
+    , input 
+      [
+        type' "text"
+      , value model.newQuestionInput
+      , name "question"
+      , onInput address UpdateQuestionInput
+      ]
+      []
+    ]
+
+answerFormElement: Address Action -> Model -> Html
+answerFormElement address model =
+  div 
+    []
+    [
+      label [] [text "answer"]
+    , input 
+      [
+        type' "text"
+      , value model.newAnswerInput
+      , name "answer"
+      , onInput address UpdateAnswerInput
+      ]
+      []
+    ]
+
+newFormButton: Address Action -> Model -> Html
+newFormButton address model =
+  button 
+    [onClick address (Add model) ] 
+    [text "New Card"]
+
+
+newCardForm: Address Action -> Model -> Html
+newCardForm address model =
+  div 
+    [class "faq-new-card-button"]
+    [
+      questionFormElement address model
+    , answerFormElement address model
+    , newFormButton address model
+    ]
 
 cards : Address Action -> Model -> Html
 cards address model =
@@ -89,5 +154,5 @@ view address model =
   div [class "faq-cards-and-button"]
     [
       cards address model 
-    , newCardButton address
+    , newCardForm address model
     ]
